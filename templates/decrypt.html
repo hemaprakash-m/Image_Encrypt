@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decrypt Image</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+    --bg-main: #0a0a12;
+    --bg-panel: #0f172a;
+    --bg-soft: #161625;
+    --accent: #4ecca3;
+    --text: #ffffff;
+    --text-dim: #94a3b8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background: var(--bg-main);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background: var(--bg-panel);
+    padding: 20px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    overflow-y: auto;
+}
+
+.sidebar h2 {
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.sidebar a {
+    display: block;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+    transition: all 0.3s ease;
+}
+
+.sidebar a.active,
+.sidebar a:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--accent);
+}
+
+/* Main */
+.main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* Header */
+.header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.header p {
+    margin-top: 8px;
+    max-width: 700px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-dim);
+}
+
+/* Layout */
+.content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 30px;
+    gap: 20px;
+}
+
+.panel {
+    padding: 20px;
+}
+
+.left {
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Dropzone */
+.dropzone {
+    border: 1px solid rgba(78, 204, 163, 0.2);
+    border-radius: 8px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    background: rgba(78, 204, 163, 0.02);
+}
+
+.dropzone:hover {
+    border-color: var(--accent);
+    background: rgba(78, 204, 163, 0.05);
+}
+
+.dropzone i {
+    font-size: 2.5rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.dropzone p {
+    margin: 10px 0;
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.dropzone small {
+    color: var(--text-dim);
+}
+
+/* Inputs */
+label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+    display: block;
+}
+
+input[type="file"],
+input[type="text"] {
+    width: 100%;
+    background: var(--bg-soft);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(78, 204, 163, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Right Panel */
+#rightPanel {
+    display: none;
+}
+
+#loading {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#loading i {
+    font-size: 3rem;
+    color: var(--accent);
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+#loading p {
+    color: var(--text-dim);
+    margin-top: 10px;
+}
+
+#resultView {
+    display: none;
+}
+
+.result {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.result p {
+    margin: 10px 0;
+}
+
+.result .file {
+    margin: 10px 0;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.btn-action {
+    margin-top: 15px;
+}
+
+.btn-download {
+    background: #1e293b;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+.btn-download:hover {
+    background: rgba(78, 204, 163, 0.1);
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+    <h2>SecureVault</h2>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('encrypt') }}">Encrypt</a>
+    <a href="{{ url_for('decrypt') }}" class="active">Decrypt</a>
+    <a href="{{ url_for('logout') }}" style="color:#ff6b6b;margin-top:20px;">Logout</a>
+</aside>
+
+<div class="main">
+    <div class="header">
+        <h1>Decrypt Image</h1>
+        <p>
+            This module restores the original image from its encrypted form.
+            The uploaded encrypted file is verified using the RSA secure key,
+            after which the chaos-based pixel transformation is reversed.
+            Any modification to the encrypted file or incorrect key will
+            result in decryption failure.
+        </p>
+    </div>
+
+    <div class="content">
+        <!-- LEFT PANEL -->
+        <div class="panel left">
+            <div class="dropzone">
+                <i class="fas fa-file-upload"></i>
+                <p>Click or drag encrypted file here</p>
+                <small>Supported: .dat files (encrypted images)</small>
+            </div>
+
+            <label>RSA Secure Key</label>
+            <input type="text" id="rsaKey" placeholder="Enter key from email" maxlength="20">
+
+            <button class="btn-action">Decrypt Image</button>
+
+            <input type="file" id="fileInput" accept=".dat">
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="panel" id="rightPanel">
+            <div id="loading">
+                <i class="fas fa-spinner"></i>
+                <p>Decrypting your image...</p>
+                <small>This may take a few moments</small>
+            </div>
+
+            <div id="resultView" class="result">
+                <p><strong>Status:</strong> <span style="color: var(--accent);">Successful</span></p>
+                <p class="file">
+                    <strong>Recovered:</strong> <span id="resFileName">image.png</span>
+                </p>
+
+                <button class="btn-action btn-download" id="downloadBtn">
+                    <i class="fas fa-download"></i> Download Image
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/decrypt.js') }}"></script>
+</body>
+</html>

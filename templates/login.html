@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SecureImage Vault</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-primary: #0a0a12;
+            --dark-secondary: #101930;
+            --accent-teal: #4ecca3;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --input-fill: #1a1a2e;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            height: 100vh;
+            background-color: var(--dark-primary);
+            color: var(--text-main);
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Left Side: Immersive Security Image */
+        .info-side {
+            flex: 1;
+            position: relative;
+            background: linear-gradient(135deg, rgba(10, 10, 18, 0.9) 0%, rgba(15, 52, 96, 0.8) 100%),
+                        url('https://images.unsplash.com/photo-1558494949-ef010cbdcc51?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8%;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .back-link:hover { color: var(--accent-teal); }
+
+        .info-side h1 {
+            font-size: 3.5rem;
+            margin: 0 0 20px 0;
+            line-height: 1.1;
+        }
+
+        .info-side p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .login-highlight {
+            border-left: 3px solid var(--accent-teal);
+            padding-left: 20px;
+            margin-top: 20px;
+        }
+
+        .login-highlight i {
+            color: var(--accent-teal);
+            margin-right: 10px;
+        }
+
+        /* Right Side: Login Form */
+        .form-side {
+            flex: 0.8;
+            background-color: var(--dark-secondary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .form-header { margin-bottom: 40px; }
+        .form-header h2 { font-size: 2rem; margin-bottom: 10px; }
+        .form-header p { color: var(--text-dim); font-size: 0.9rem; }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--input-fill);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-teal);
+            background: #23233d;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--accent-teal);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(78, 204, 163, 0.2);
+        }
+
+        .register-cta {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .register-cta a {
+            color: var(--accent-teal);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 1024px) {
+            .info-side { display: none; }
+            .form-side { flex: 1; padding: 0 15%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="info-side">
+            <a href="{{ url_for('index') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Homepage</a>
+            <h1>Secure <br>Access.</h1>
+            <p>Welcome back to your image vault. Sign in to manage your encrypted files and security keys.</p>
+            
+            <div class="login-highlight">
+                <p><i class="fas fa-fingerprint"></i> Authorized Access Only</p>
+                <p><i class="fas fa-microchip"></i> Chaos-RSA Algorithm Protocol</p>
+            </div>
+        </div>
+
+        <div class="form-side">
+            <div class="form-header">
+                <h2>User Login</h2>
+                <p>Please enter your credentials to proceed.</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" style="background-color: {% if category == 'error' %}#ff4d4d{% else %}#4ecca3{% endif %}; color: {% if category == 'error' %}white{% else %}#000{% endif %}; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                            <i class="fas fa-{% if category == 'error' %}exclamation-circle{% else %}check-circle{% endif %}"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form id="loginForm" method="POST" action="{{ url_for('login') }}">
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Sign In</button>
+            </form>
+
+            <div class="register-cta">
+                Don't have an account yet? <a href="{{ url_for('register') }}">Register Now</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>

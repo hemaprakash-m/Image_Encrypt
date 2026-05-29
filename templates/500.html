@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 | Page Not Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",Tahoma,Verdana,sans-serif;}
+        body{min-height:100vh;display:flex;align-items:center;justify-content:center;
+             background:linear-gradient(135deg,#eef5ff,#f9fbff);color:#2c3e50;}
+
+        .error-box{
+            background:#fff;
+            padding:50px 45px;
+            border-radius:18px;
+            box-shadow:0 25px 60px rgba(0,80,160,.15);
+            text-align:center;
+            max-width:420px;
+            width:90%;
+            animation:fadeIn .4s ease;
+        }
+
+        @keyframes fadeIn{
+            from{opacity:0;transform:translateY(12px);}
+            to{opacity:1;transform:none;}
+        }
+
+        .error-code{
+            font-size:88px;
+            font-weight:800;
+            color:#2d6cdf;
+            line-height:1;
+        }
+
+        .error-title{
+            font-size:24px;
+            font-weight:700;
+            margin:15px 0 8px;
+            color:#1f3c88;
+        }
+
+        .error-text{
+            font-size:15px;
+            color:#666;
+            margin-bottom:25px;
+            line-height:1.6;
+        }
+
+        .btn-home{
+            display:inline-block;
+            padding:12px 22px;
+            border-radius:10px;
+            background:linear-gradient(135deg,#2d6cdf,#4d8cff);
+            color:#fff;
+            text-decoration:none;
+            font-weight:600;
+            transition:.2s;
+        }
+
+        .btn-home:hover{
+            transform:translateY(-1px);
+            box-shadow:0 12px 28px rgba(45,108,223,.35);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="error-box">
+        <div class="error-code">500</div>
+        <div class="error-title">Page Not Found</div>
+        <div class="error-text">
+            Sorry, Error occured!
+        </div>
+
+        <a href="{{ url_for('index') }}" class="btn-home">Back to Home</a>
+    </div>
+
+</body>
+</html>
